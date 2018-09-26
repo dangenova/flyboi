@@ -106,8 +106,8 @@ int main(int argc, char **argv)
     double dif_x;
     double dif_y;
     geometry_msgs::PoseStamped setpoint;
-    setpoint.pose.position.x = 30;
-    setpoint.pose.position.y = 40;
+    setpoint.pose.position.x = 15;
+    setpoint.pose.position.y = 10;
     ros::spinOnce(); //pickup the current height
     setpoint.pose.position.z = loc_pos.pose.position.z;
     
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
 
     //setpoint 2
     setpoint.pose.position.x = -10;
-    setpoint.pose.position.y = 60;
+    setpoint.pose.position.y = -4;
     ros::spinOnce(); //pickup the current height
     setpoint.pose.position.z = loc_pos.pose.position.z;
     
