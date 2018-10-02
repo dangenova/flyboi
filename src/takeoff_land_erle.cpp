@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     ////////////////////////////////////////////
     ros::ServiceClient takeoff_cl = n.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
     mavros_msgs::CommandTOL srv_takeoff;
-    srv_takeoff.request.altitude = 10;
+    srv_takeoff.request.altitude = 5;
     srv_takeoff.request.latitude = 0;
     srv_takeoff.request.longitude = 0;
     srv_takeoff.request.min_pitch = 0;
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     double dif_x;
     double dif_y;
     geometry_msgs::PoseStamped setpoint;
-    setpoint.pose.position.x = 15;
+    setpoint.pose.position.x = 5;
     setpoint.pose.position.y = 10;
     ros::spinOnce(); //pickup the current height
     setpoint.pose.position.z = loc_pos.pose.position.z;
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
     }
 
     //setpoint 2
-    setpoint.pose.position.x = -10;
+    setpoint.pose.position.x = -5;
     setpoint.pose.position.y = -4;
     ros::spinOnce(); //pickup the current height
     setpoint.pose.position.z = loc_pos.pose.position.z;
