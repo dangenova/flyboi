@@ -4,14 +4,24 @@
 #include <ros/ros.h>
 #include <mavros_msgs/CommandBool.h>
 #include <mavros_msgs/CommandTOL.h>
+#include <mavros_msgs/State.h>
 #include <mavros_msgs/SetMode.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <tf2/LinearMath/Quaternion.h>
 
 
 geometry_msgs::PoseStamped loc_pos;
+mavros_msgs::State UAV_state;
+
+
 void pose_cb(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 	loc_pos = *msg;
 }
+
+void state_cb(const mavros_msgs::State::ConstPtr& msg) {
+    UAV_state = *msg;
+}
+
 
 int main(int argc, char **argv)
 {
@@ -24,6 +34,7 @@ int main(int argc, char **argv)
     ros::Rate r(rate);
 
 	ros::Subscriber loc_pos_sub = n.subscribe("/mavros/local_position/pose", 10, pose_cb);
+    ros::Subscriber state_pos_sub = n.subscribe("/mavros/state", 10, state_cb);
     ros::Publisher  loc_pos_pub = n.advertise<geometry_msgs::PoseStamped>("mavros/setpoint_position/local", 10);
 
 	
@@ -36,8 +47,9 @@ int main(int argc, char **argv)
     mavros_msgs::SetMode srv_setMode;
     srv_setMode.request.base_mode = 0;
     srv_setMode.request.custom_mode = "GUIDED";
+    
     if(cl.call(srv_setMode)){
-    	ROS_INFO("Entering GUIDED MODE");
+        ROS_INFO("Entering GUIDED MODE");
         //ROS_ERROR("setmode send ok %d value:", srv_setMode.response.success);
     }else{
         ROS_ERROR("Failed SetMode");
@@ -54,15 +66,26 @@ int main(int argc, char **argv)
     mavros_msgs::CommandBool srv;
     srv.request.value = true;
     if(arming_cl.call(srv)){
-    	ROS_INFO("Armed");
-       // ROS_ERROR("ARM send ok %d", srv.response.success);
+        ros::spinOnce();
+        if(UAV_state.armed) {
+            ROS_INFO("Armed");
+            // ROS_ERROR("ARM send ok %d", srv.response.success);
+        }else {
+            ROS_INFO("Failure to Arm");
+            ROS_INFO("Exiting Program");
+            return -1;
+        }
     }else{
-        ROS_ERROR("Failed arming or disarming");
+        ROS_ERROR("Failed arming");
+        return -1;
     }
 
     ////////////////////////////////////////////
     /////////////////TAKEOFF////////////////////
     ////////////////////////////////////////////
+
+    ROS_INFO("Trying to takeoff");
+
     ros::ServiceClient takeoff_cl = n.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
     mavros_msgs::CommandTOL srv_takeoff;
     srv_takeoff.request.altitude = 5;
@@ -100,8 +123,37 @@ int main(int argc, char **argv)
     ////////////////////////////////////////////
     /////////////////DO STUFF///////////////////
     ////////////////////////////////////////////
+    
 
-  
+    /////////////////////////////////////////////////////////
+    ///////////////Check Attitude Control/////////////
+    /////////////////////////////////////////////////////////
+    tf2::Quaternion Q;
+    geometry_msgs::PoseStamped angle_command;
+    ros::Publisher orient_pub;
+    orient_pub = n.advertise<geometry_msgs::PoseStamped>("/mavros/setpoint_attitude/attitude", 10);
+    float roll;
+
+    roll = 3.14/6;
+    Q.setRPY(roll,0, 3.14); // roll, pitch, yaw
+    
+
+
+    ROS_INFO("the roll is %f", roll);
+    angle_command.pose.orientation.x = Q[0];
+    angle_command.pose.orientation.y = Q[1];
+    angle_command.pose.orientation.z = Q[2];
+    angle_command.pose.orientation.w = Q[3];
+    orient_pub.publish(angle_command);
+
+    ROS_INFO("Start Sleep");
+    sleep(30);
+    ROS_INFO("End Sleep");
+
+    /////////////////////////////////////////////////////////////////////
+    ////////////////////Fly to different spot///////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
     //setpoint 1
     double dif_x;
     double dif_y;
@@ -122,6 +174,7 @@ int main(int argc, char **argv)
         dif_x = abs(setpoint.pose.position.x-loc_pos.pose.position.x);
         dif_y = abs(setpoint.pose.position.y-loc_pos.pose.position.y);
     }
+
 
     //setpoint 2
     setpoint.pose.position.x = -5;

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>flyboi</name>
+  <name>flyboi_ethz</name>
   <version>0.0.0</version>
   <description>The flyboi package</description>
 
@@ -69,7 +69,9 @@
   <depend>urdf</depend>
   <depend>tf</depend>
 
-
+ <!-- Stuff for ETZH Zurich -->
+  <depend>tf2</depend>
+ <depend>mav_msgs</depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->

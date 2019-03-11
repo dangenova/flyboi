@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(flyboi)
+project(flyboi_ethz)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -18,9 +18,13 @@ find_package(catkin REQUIRED COMPONENTS
   visualization_msgs
   urdf
   tf
+  tf2
 )
 
-## System dependencies are found with CMake's conventions
+#This does a fin_package for all things declared as a dependency in the package.xml
+find_package(catkin_simple REQUIRED)
+catkin_simple()
+
 
 ## IDK im just following the CMakeLists.txt from MAVROS extras stuff
 #find_package(Boost REQUIRED COMPONENTS system)
@@ -117,7 +121,7 @@ include(MavrosMavlink)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES flyboi
-  CATKIN_DEPENDS roscpp rospy std_msgs mavros mavros_msgs sensor_msgs geometry_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs mavros mavros_msgs sensor_msgs geometry_msgs mav_msgs
 #  DEPENDS system_lib
 )
 
@@ -129,11 +133,12 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  ${mavlink_INCLUDE_DIRS}
+  	
+   
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
+#   add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/flyboi.cpp
 # )
 
@@ -148,6 +153,9 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/flyboi_node.cpp)
 add_executable(takeoff_land_erle src/takeoff_land_erle.cpp)
 add_executable(px4_hover src/px4_hover.cpp)
+add_executable(Command_Conversion src/Command_Conversion.cpp)
+add_executable(Mavros_Command_Test src/Mavros_Command_Test.cpp)
+add_executable(takeoff_initialize src/takeoff_initialize.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,10 +170,15 @@ add_executable(px4_hover src/px4_hover.cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(takeoff_land_erle ${catkin_LIBRARIES})
 target_link_libraries(px4_hover ${catkin_LIBRARIES})
+target_link_libraries(Command_Conversion ${catkin_LIBRARIES})
+target_link_libraries(Mavros_Command_Test ${catkin_LIBRARIES})
+target_link_libraries(takeoff_initialize ${catkin_LIBRARIES})
 
 add_dependencies(takeoff_land_erle flyboi_generate_messages_cpp)
 add_dependencies(px4_hover flyboi_generate_messages_cpp)
-
+add_dependencies(Command_Conversion flyboi_generate_messages_cpp)
+add_dependencies(Mavros_Command_Test flyboi_generate_messages_cpp)
+add_dependencies(takeoff_initialize flyboi_generate_messages_cpp)
 
 #############
 ## Install ##
