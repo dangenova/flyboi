@@ -47,10 +47,10 @@ if __name__ == '__main__':
 	t_o = rospy.get_time()
 	x_o = 1.0
 	y_o = 1.0
-	z_o = 5.0;
-	roll_o = 0;
-	pitch_o = 0;
-	yaw_o = 0;
+	z_o = 5.0
+	roll_o = 0
+	pitch_o = 0
+	yaw_o = 0
 
 	r = rospy.Rate(10)  #time in secs
 	rospy.loginfo('I exist')

@@ -69,28 +69,27 @@ class SubscribePublishMPCCommand {
 
 int main(int argc, char **argv) {
 
-    ros::init(argc, argv, "MPC_Command_Convert");
+  ros::init(argc, argv, "MPC_Command_Convert");
 
-    ROS_INFO("Before Class Declaration");
+  ROS_INFO("Before Class Declaration");
 
-    SubscribePublishMPCCommand SAP_Obj;
+  SubscribePublishMPCCommand SAP_Obj;
 
-    pi = atan(1)*4;
+  pi = atan(1)*4;
 	int rate = 50;
-    ros::Rate r(rate);
+  ros::Rate r(rate);
 	
 	//SAP_Obj.print();
 
 
 
-    while (ros::ok())
-    {
+  while (ros::ok()){
       ros::spinOnce();
       r.sleep();
-    }    
+  }    
 
-    ROS_INFO("Not Spinning");
+  ROS_INFO("Not Spinning");
     
-    return 0;
+  return 0;
 }
 
