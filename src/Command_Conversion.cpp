@@ -48,7 +48,7 @@ class SubscribePublishMPCCommand {
 			
 			mavros_command.body_rate.x = 0;
 			mavros_command.body_rate.y = 0;
-			mavros_command.body_rate.z = 0;
+			mavros_command.body_rate.z = mpc_command.yaw_rate;
 		
 			mavros_command.thrust = .5;
 
