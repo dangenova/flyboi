@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
   SubscribePublishMPCCommand SAP_Obj;
 
   pi = atan(1)*4;
-	int rate = 50;
+  int rate = 50;
   ros::Rate r(rate);
 	
 	//SAP_Obj.print();

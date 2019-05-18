@@ -20,6 +20,7 @@ mavros_msgs::State UAV_state;
 double local_roll;
 double local_pitch;
 double local_yaw;
+double yaw_deg;
 float pi;
 
 void pose_cb(const geometry_msgs::PoseStamped::ConstPtr& msg) {
@@ -31,7 +32,7 @@ void pose_cb(const geometry_msgs::PoseStamped::ConstPtr& msg) {
         loc_pos.pose.orientation.w);
     tf::Matrix3x3 m(q);
     m.getRPY(local_roll, local_pitch, local_yaw);
-    
+    yaw_deg = local_yaw*180/pi;
 }
 
 void state_cb(const mavros_msgs::State::ConstPtr& msg) {
@@ -121,14 +122,18 @@ int main(int argc, char **argv)
         step = 3;
     }
     else if(loc_pos.pose.position.z > 1.0) {
-        ROS_INFO("Program Stopped Because UAV is already in Flight");
-        return -1;
+        ROS_INFO("UAV already in Flight, Zeroing Yaw position");
+        step = 5;
     }
     else {
         step = 1;
     }
     ////////////////ROS LOOP Setup/////////////
     ros::Time last_request = ros::Time::now();
+    double fast_yawrate = 10*pi/180;
+    double slow_yawrate = 1.0*pi/180;
+    double high_yaw_limit = 5.0;
+    double low_yaw_limit = 1;
 
     while (ros::ok()){
 
@@ -181,18 +186,39 @@ int main(int argc, char **argv)
                 }
                 break;
             case 5:
-                attitude_publisher.publish(attitude_command);
-                if((local_yaw*180/pi) < 1 || (local_yaw*180/pi)>359) {
-                    step++;
-                    ROS_INFO("Takeoff and Orientation Finished, feel free to Exit Program");
+                if(yaw_deg > high_yaw_limit) {
+                    attitude_command.body_rate.z = -fast_yawrate;
                 }
-                ROS_INFO("Command Values: %f %f %f %f", attitude_command.orientation.x, attitude_command.orientation.y, attitude_command.orientation.z,attitude_command.orientation.w);
-                ROS_INFO("Degrees Roll is %f, Pitch is %f, Yaw is %f", local_roll*180/pi,local_pitch*180/pi,local_yaw*180/pi);   
-                ROS_INFO("Rads Roll is %f, Pitch is %f, Yaw is %f", local_roll,local_pitch,local_yaw);              
+                
+                else if(yaw_deg < high_yaw_limit && yaw_deg > low_yaw_limit) {
+                    attitude_command.body_rate.z = -slow_yawrate;
+                }
+                
+                else if(yaw_deg < -low_yaw_limit && yaw_deg > -high_yaw_limit) {
+                    attitude_command.body_rate.z = slow_yawrate;
+                }
+                else if(yaw_deg < -high_yaw_limit) {
+                    attitude_command.body_rate.z = fast_yawrate;
+                }
+                else {
+                    attitude_command.body_rate.z = 0;
+                }
+                
+                if((yaw_deg <= 1 && yaw_deg >= 0) || (yaw_deg <= 0 && yaw_deg >= -1)) {
+                    step++;
+                }
+                ROS_INFO("Yaw Rate in deg %f",attitude_command.body_rate.z*180/pi);
+                ROS_INFO("Degrees Roll is %f, Pitch is %f, Yaw is %f", local_roll*180/pi,local_pitch*180/pi,yaw_deg);                 
+                attitude_publisher.publish(attitude_command);
                 break;
             case 6:
-                break;          
-
+                ROS_INFO("");
+                ROS_INFO("");
+                ROS_INFO("");
+                ROS_INFO("Takeoff and Orientation Finished, feel free to Exit Program");
+                step++;
+            case 7:
+                break;     
         }
 
         //ROS_INFO("Roll is %f, Pitch is %f, Yaw is %f", local_roll*180/pi,local_pitch*180/pi,local_yaw*180/pi);

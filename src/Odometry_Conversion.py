@@ -21,7 +21,7 @@ class SubscribeAndPublishOdom():
         
 
 
-        self.odom_pub = rospy.Publisher('/zzzzzzz', Odometry, queue_size=10 )
+        self.odom_pub = rospy.Publisher('/ardu/odom', Odometry, queue_size=10 )
 
         self.odom = Odometry()
 	
@@ -52,7 +52,7 @@ class SubscribeAndPublishOdom():
 
 if __name__ == '__main__':
     rospy.init_node('Odometry_Conversion', anonymous=False)
-    r = rospy.Rate(10)  #time in secs
+    r = rospy.Rate(50)  #hz
     rospy.loginfo('Im supes cool')
     do_it = SubscribeAndPublishOdom()
 
