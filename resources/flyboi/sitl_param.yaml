@@ -1,0 +1,7 @@
+## Parameters:
+
+sampling_frequency: 50
+predition_frequency: 10
+horizon_length: 20
+history_length_ols: 20
+ols_factor: 4

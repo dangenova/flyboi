@@ -1,0 +1,37 @@
+<launch>
+ <!-- vim: set ft=xml noet : -->
+
+<!-- Stuff for Mavros Node : -->
+	<arg name="fcu_url" default="udp://127.0.0.1:14551@14555" />
+	<arg name="gcs_url" default="" />
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="fcu_protocol" default="v2.0" />
+	<arg name="respawn_mavros" default="false" />
+
+	<include file="$(find mavros)/launch/node.launch">
+		<arg name="pluginlists_yaml" value="$(find mavros)/launch/apm_pluginlists.yaml" />
+		<arg name="config_yaml" value="$(find mavros)/launch/apm_config.yaml" />
+
+		<arg name="fcu_url" value="$(arg fcu_url)" />
+		<arg name="gcs_url" value="$(arg gcs_url)" />
+		<arg name="tgt_system" value="$(arg tgt_system)" />
+		<arg name="tgt_component" value="$(arg tgt_component)" />
+		<arg name="log_output" value="$(arg log_output)" />
+		<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+		<arg name="respawn_mavros" default="$(arg respawn_mavros)" />
+	</include>
+<!-- End of Mavros Node Setup -->
+
+
+ <group ns = "flyboi">
+ 	<rosparam file="$(find flyboi_ethz)/resources/flyboi/sitl_param.yaml" />
+ </group>
+ <group ns="APM_SITL_Wrapper">
+ 	<node name = "Command_Conversion" pkg = "flyboi_ethz" type = "Command_Conversion" output="screen"/>
+	<node name = "Odometry_Conversion" pkg = "flyboi_ethz" type = "Odometry_Conversion.py" output="screen"/>
+ </group>
+	<!-- <include file = "$(find mavros)/launch/apm-sitl.launch" />  -->
+	
+</launch>

@@ -24,7 +24,7 @@ void path_create(double t) {
 	path.pose.position.x = x;
 	path.pose.position.y = y;
 	path.pose.position.z = z;
-	path_pub.publish(path)
+	path_pub.publish(path);
 }
 
 

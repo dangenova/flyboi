@@ -19,12 +19,11 @@ class SubscribeAndPublishOdom():
         self.ts = message_filters.TimeSynchronizer([self.pose_sub, self.vel_sub],2)
         self.ts.registerCallback(self.callback)
         
-
-
+        #Publish Odometry
         self.odom_pub = rospy.Publisher('/ardu/odom', Odometry, queue_size=10 )
-
+        
+        #Initilize Odometry Matrix
         self.odom = Odometry()
-	
         self.cov_matrix_pub = np.zeros(36)
         cov_matrix = np.identity(6)*.01 
         self.cov_matrix_pub = cov_matrix.flatten()
@@ -52,8 +51,9 @@ class SubscribeAndPublishOdom():
 
 if __name__ == '__main__':
     rospy.init_node('Odometry_Conversion', anonymous=False)
-    r = rospy.Rate(50)  #hz
-    rospy.loginfo('Im supes cool')
+    hz = rospy.get_param('/flyboi/sampling_frequency')
+    r = rospy.Rate(hz)  #hz
+    rospy.loginfo('Odometry Conversion Node Initialized')
     do_it = SubscribeAndPublishOdom()
 
     while not rospy.is_shutdown():

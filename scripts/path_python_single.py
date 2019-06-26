@@ -8,6 +8,7 @@ from rosgraph_msgs.msg import Clock
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
+import std_msgs.msg
 
 
 
@@ -24,15 +25,11 @@ class Path():
 		self.quaternion = [0, 0, 0, 0]
 
 		self.msg = PoseStamped()
-		
-		self.msg_cov = PoseWithCovarianceStamped()
-		self.cov_matrix_pub = np.zeros(36)
-		cov_matrix = np.identity(6)*.01 
-		self.cov_matrix_pub = cov_matrix.flatten()
-	#	rospy.Subscriber('/clock', Clock, self.updatetime)
+		self.header = std_msgs.msg.Header()
 
 	def update(self):
-		self.msg.pose.position.x = 5*math.cos(.4*self.t-self.t_o)+self.x_o
+		self.msg.header.stamp = rospy.Time.now()
+		self.msg.pose.position.x = 5*math.sin(.3*self.t-self.t_o)+self.x_o
 		self.msg.pose.position.y = .2*self.y_o*(self.t-self.t_o)
 		self.msg.pose.position.z = self.z_o
 		self.quaternion = tf.transformations.quaternion_from_euler(self.roll_o, self.pitch_o, self.yaw_o)
@@ -40,30 +37,12 @@ class Path():
 		self.msg.pose.orientation.y = self.quaternion[1]
 		self.msg.pose.orientation.z = self.quaternion[2]
 		self.msg.pose.orientation.w = self.quaternion[3]
-
 		rospy.loginfo('the time is %.2f',t-t_o)
 		return self.msg
-
-	def cov(self):
-		self.msg_cov.pose.pose.position.x = 5*math.cos(.4*self.t-self.t_o)+self.x_o
-		self.msg_cov.pose.pose.position.y = .2*self.y_o*(self.t-self.t_o)
-		self.msg_cov.pose.pose.position.z = self.z_o
-		self.msg_cov.pose.pose.orientation.x = self.quaternion[0]
-		self.msg_cov.pose.pose.orientation.y = self.quaternion[1]
-		self.msg_cov.pose.pose.orientation.z = self.quaternion[2]
-		self.msg_cov.pose.pose.orientation.w = self.quaternion[3]
-		self.msg_cov.pose.covariance = self.cov_matrix_pub
-	
-		return self.msg_cov
-
-	#def updatetime(self,data):
-	#	self.t = data.to_sec()
-
 
 if __name__ == '__main__':
 	rospy.init_node('path_python', anonymous=False)
 	pos_pub = rospy.Publisher('/command/pose', PoseStamped ,queue_size=10)
-	cov_pub = rospy.Publisher('/command/covariance', PoseWithCovarianceStamped, queue_size=10 )
 	t_o = rospy.get_time()
 	x_o = 1.0
 	y_o = 1.0
@@ -72,14 +51,13 @@ if __name__ == '__main__':
 	pitch_o = 0
 	yaw_o = 0
 
-	r = rospy.Rate(10)  #time in secs
-	rospy.loginfo('I exist')
+	hz = rospy.get_param('/flyboi/sampling_frequency')
+	r = rospy.Rate(hz)  #time in hz
+	rospy.loginfo('Publishing Position')
 
 	path = Path(x_o, y_o, z_o, t_o, roll_o, pitch_o, yaw_o)
 	while not rospy.is_shutdown():
 		t = rospy.get_time()
 		path.t = t
 		pos_pub.publish(path.update())
-		#cov_pub.publish(path.cov())
-		#rospy.loginfo('update') 
 		r.sleep()

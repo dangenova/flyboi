@@ -29,6 +29,7 @@ class SubscribePublishMPCCommand {
 		float max_thrust = 43.275; //max thrust for Mavros machine
 		float mpc_thrust;
 		int size;
+		int rate;
 
 	public: 
 		
@@ -63,6 +64,13 @@ class SubscribePublishMPCCommand {
 		void print() {
 			ROS_INFO("Print Works");
 		}
+
+		double get_rate() {
+			if (!n.getParam("/flyboi/sampling_frequency", rate)) {
+    		ROS_ERROR("Publishing Frequency could not be loaded");
+				return rate;
+  		}
+		}
 		
 
 };
@@ -76,7 +84,11 @@ int main(int argc, char **argv) {
   SubscribePublishMPCCommand SAP_Obj;
 
   pi = atan(1)*4;
-  int rate = 50;
+  
+	double rate;
+	
+	rate = SAP_Obj.get_rate();
+	
   ros::Rate r(rate);
 	
 	//SAP_Obj.print();

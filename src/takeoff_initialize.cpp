@@ -1,9 +1,8 @@
 #include <cstdlib>
 #include <math.h>
-#include <std_msgs/String.h>
-
 #include <ros/ros.h>
 
+#include <std_msgs/String.h>
 #include <mavros_msgs/CommandBool.h>
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/State.h>
@@ -17,6 +16,7 @@
 
 geometry_msgs::PoseStamped loc_pos;
 mavros_msgs::State UAV_state;
+
 double local_roll;
 double local_pitch;
 double local_yaw;
@@ -43,9 +43,12 @@ void state_cb(const mavros_msgs::State::ConstPtr& msg) {
 
 int main(int argc, char **argv)
 {
-     pi = atan(1)*4;
+    pi = atan(1)*4;
     int rate = 4;
     int step;
+    float altitude;
+
+    altitude = 5;
 
     ros::init(argc, argv, "takeoff_initialize");
     ros::NodeHandle n;
@@ -54,7 +57,9 @@ int main(int argc, char **argv)
 
 	ros::Subscriber loc_pos_sub = n.subscribe<geometry_msgs::PoseStamped>("/mavros/local_position/pose", 10, pose_cb);
     ros::Subscriber state_pos_sub = n.subscribe<mavros_msgs::State>("/mavros/state", 10, state_cb);
-
+    ros::Publisher local_pos_pub = n.advertise<geometry_msgs::PoseStamped>("mavros/setpoint_position/local", 10);
+    
+    
     /////////////////GUIDED//////////////////////
     ros::ServiceClient set_mode_client = n.serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
     mavros_msgs::SetMode srv_setMode;
@@ -70,7 +75,7 @@ int main(int argc, char **argv)
 
     ros::ServiceClient takeoff_client = n.serviceClient<mavros_msgs::CommandTOL>("/mavros/cmd/takeoff");
     mavros_msgs::CommandTOL srv_takeoff;
-    srv_takeoff.request.altitude = 5;
+    srv_takeoff.request.altitude = altitude;
     srv_takeoff.request.latitude = 0;
     srv_takeoff.request.longitude = 0;
     srv_takeoff.request.min_pitch = 0;
@@ -100,9 +105,15 @@ int main(int argc, char **argv)
     attitude_command.body_rate.z = 0;
         
     attitude_command.thrust = .5;
+
+    //////////////// Maintain Position ///////////////
+    geometry_msgs::PoseStamped pose;
+    pose.pose.position.x = 0;
+    pose.pose.position.y = 0;
+    pose.pose.position.z = altitude;
    
 
-    /////////////// ADD SOMETHING HERE SAYING THAT THE PROGRAM IS GOING TO CLOSE BECAUSE THE UAV is already doing its thingc
+    /////////////// Where to Start System ////////
     
     int count = 5;
     ROS_INFO("Checking current UAV STATE");
@@ -212,12 +223,13 @@ int main(int argc, char **argv)
                 attitude_publisher.publish(attitude_command);
                 break;
             case 6:
-                ROS_INFO("");
-                ROS_INFO("");
-                ROS_INFO("");
+                ROS_INFO(" ");
+                ROS_INFO(" ");
+                ROS_INFO(" ");
                 ROS_INFO("Takeoff and Orientation Finished, feel free to Exit Program");
                 step++;
             case 7:
+                local_pos_pub.publish(pose);
                 break;     
         }
 
