@@ -1,3 +1,9 @@
+## ignore sharing bag files
+
+*.bag
+
+
+## everything here is in an atempt to ignore bs code stuff, its hella annoying, cant get it to work
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
