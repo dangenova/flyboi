@@ -64,9 +64,9 @@ Right now, 3 Launch files will need to be excecuted in order to run tests:
    $roslaunch flyboi_ethz mav_linear_mpc_dji_flamewheel.launch
 ```
 
-'''sh
+```sh
    $roslaunch flyboi_ethz Trajectory_Prediction.launch
-'''
+```
 
 
 
