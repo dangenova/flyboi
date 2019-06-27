@@ -57,16 +57,16 @@ Right now, 3 Launch files will need to be excecuted in order to run tests:
 * Launch File to Initialize Target Trajectory
 
 ```sh
-   $roslaunch flyboi_ethz APM_DJI_Wrapper.launch
+   $ roslaunch flyboi_ethz APM_DJI_Wrapper.launch
 ```
 
 ```sh
-   $roslaunch flyboi_ethz mav_linear_mpc_dji_flamewheel.launch
+   $ roslaunch flyboi_ethz mav_linear_mpc_dji_flamewheel.launch
 ```
 
 ```sh
-   $roslaunch flyboi_ethz Trajectory_Prediction.launch
-```
+   $ roslaunch flyboi_ethz Trajectory_Prediction.launch
+```	
 
 
 
