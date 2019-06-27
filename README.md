@@ -37,14 +37,14 @@ Next download the following packages from the ETHZ-ASL Group in your ~/<workspac
 ### Download and Install 
 
 Now download this package
-'''sh
+```sh
   $ git clone https://github.com/dangenova/flyboi.git
-'''
+```
 
 Install the packages
-'''sh
+```sh
   $ catkin build
-'''
+```
 
 You also may have to turn all of the python scripts into excecutables.
 
@@ -56,13 +56,13 @@ Right now, 3 Launch files will need to be excecuted in order to run tests:
 * Launch File to start MPC Controller
 * Launch File to Initialize Target Trajectory
 
-'''sh
+```sh
    $roslaunch flyboi_ethz APM_DJI_Wrapper.launch
-'''
+```
 
-'''sh
+```sh
    $roslaunch flyboi_ethz mav_linear_mpc_dji_flamewheel.launch
-'''
+```
 
 '''sh
    $roslaunch flyboi_ethz Trajectory_Prediction.launch
