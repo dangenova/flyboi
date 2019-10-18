@@ -1,0 +1,21 @@
+ <!-- vim: set ft=xml noet : -->
+<launch>
+ <arg name="UAV" default="crazyflie" />
+ <arg name="Reference_Topic" default = "/target/position" />
+ <arg name="UAV_Odom_Topic" default = "/crazyflie/odom_mpc" />
+
+ <group ns = "flyboi">
+ 	<rosparam file="$(find flyboi_ethz)/resources/flyboi/$(arg UAV)_param.yaml" />
+ </group>
+
+ 	<node name = "Reference_Node" pkg = "flyboi_ethz" type = "Circle_Path_Timer.py" output="screen">
+		<param name="PublishTopic" value="$(arg Reference_Topic)" />
+		<param name="SubscribeTopic" value="$(arg UAV_Odom_Topic)" />
+	</node>
+	
+	<node name = "Trajectory_Estimation" pkg = "flyboi_ethz" type = "ListenPredict.py" output="screen">
+		<param name="UAV_Odom_Topic" value="$(arg UAV_Odom_Topic)" />
+	</node>
+
+
+</launch>

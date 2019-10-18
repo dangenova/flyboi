@@ -40,6 +40,11 @@
  <!-- Stuff for ETZH Zurich -->
   <depend>tf2</depend>
   <depend>mav_msgs</depend>
+
+<!-- Stuff for Crazyflie -->
+  <depend>crazyflie_demo</depend>
+  <depend>crazyflie_controller</depend>
+  <depend>crazyflie_driver</depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->

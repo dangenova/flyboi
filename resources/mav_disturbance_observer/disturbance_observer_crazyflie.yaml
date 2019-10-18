@@ -6,17 +6,16 @@ KF_observer:
   P0_position: 0.01
   P0_velocity: 0.01
   P0_attitude: 0.01
-  P0_angular_velocity: 0.01
+  P0_angular_velocity: 0.1
   P0_force: 0.01
   P0_torque: 0.01
-  
   #process noise
   q_position: 0.01
-  q_velocity: 0.01
-  q_attitude: 0.01
-  q_angular_velocity: 0.01
-  q_force: 0.01
-  q_torque: 0.01
+  q_velocity: 0.025
+  q_attitude: 0.015
+  q_angular_velocity: 0.02
+  q_force: 0.1
+  q_torque: 0.1
   
   #measurement noise
   r_position: 0.001
@@ -30,12 +29,12 @@ KF_observer:
 
   #model from system identification (2nd order attitude model)
   drag_coefficients : [ 0.010000 , 0.010000 , 0]
-  roll_omega : 7.07
-  roll_damping : 0.72
-  roll_gain : 0.8
-  pitch_omega : 7.07
-  pitch_damping : 0.76
-  pitch_gain : 0.84
+  roll_omega : 8.963
+  roll_damping : 0.747
+  roll_gain : 0.957
+  pitch_omega : 8.769
+  pitch_damping : 0.677
+  pitch_gain : 0.913
   yaw_omega : 5.000000
   yaw_damping : 0.950000
   yaw_gain : 1.000000

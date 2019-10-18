@@ -22,7 +22,7 @@ class ListenAndPredict():
         self.y_tilde = np.zeros(self.hor_l)
         self.z_tilde = np.zeros(self.hor_l)
         
-        self.sub = rospy.Subscriber('/target/trajectory', PoseStamped, self.callback)
+        self.sub = rospy.Subscriber('/target/position', PoseStamped, self.callback)
         self.OLS = ols.OLS(self.his_hz, self.fut_hz, self.hor_l, self.his_l, ols_factor)
         self.TrajectoryPublisher = traj.Trajectory(self.fut_hz, self.hor_l)
 

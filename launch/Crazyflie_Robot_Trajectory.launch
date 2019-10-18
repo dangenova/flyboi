@@ -1,0 +1,27 @@
+ <!-- vim: set ft=xml noet : -->
+<launch>
+ <arg name="UAV" default="crazyflie" />
+ <arg name="Reference_Topic" default = "/target/position" />
+ <arg name="UAV_Odom_Topic" default = "/crazyflie/odom_mpc" />
+ <arg name="GroundRobotName" default = "robot4" />
+ <arg name="HeightOffset" default = "1" />
+
+
+ <group ns = "flyboi">
+ 	<rosparam file="$(find flyboi_ethz)/resources/flyboi/$(arg UAV)_param.yaml" />
+ </group>
+
+ 	<node name = "GroundRobotReference" pkg = "flyboi_ethz" type = "GroundRobotListen.py" output="screen">
+		<param name="PublishTopic" value="$(arg Reference_Topic)" />
+		<param name="TimerSubscribeTopic" value="$(arg UAV_Odom_Topic)" />
+		<param name="ReferenceSubscribeTopic" value="crazyflie/vrpn_client_node/$(arg GroundRobotName)/pose" />
+		<param name="HeightOffset" value="$(arg HeightOffset)" />
+
+	</node>
+	
+	<node name = "Trajectory_Estimation" pkg = "flyboi_ethz" type = "ListenPredict.py" output="screen">
+		<param name="UAV_Odom_Topic" value="$(arg UAV_Odom_Topic)" />
+	</node>
+
+
+</launch>

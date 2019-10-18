@@ -64,9 +64,8 @@ class Path():
 
 if __name__ == '__main__':
 	rospy.init_node('path_python', anonymous=False)
-	#pos_pub = rospy.Publisher('/command/pose', PoseStamped ,queue_size=10)
-	pos_pub = rospy.Publisher('/target/trajectory', PoseStamped ,queue_size=10)
-	#cov_pub = rospy.Publisher('/command/covariance', PoseWithCovarianceStamped, queue_size=10 )
+	publish_topic_name= rospy.get_param('~PublishTopic', "/command/pose")
+	pos_pub = rospy.Publisher(publish_topic_name, PoseStamped ,queue_size=10)
 	t_o = rospy.get_time()
 	x_o = 1.0
 	y_o = 1.0

@@ -21,6 +21,9 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
   message_generation
   mav_msgs
+  crazyflie_controller
+  crazyflie_demo
+  crazyflie_driver
 )
 
 #This does a find_package for all things declared as a dependency in the package.xml
@@ -68,6 +71,14 @@ catkin_python_setup()
 add_message_files(
    FILES
    pose_comparison.msg
+   Joyfilter.msg
+)
+
+## Generate services in the 'srv' folder
+add_service_files(
+   FILES
+   CrazyfliePID.srv
+   
 )
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
@@ -144,6 +155,7 @@ add_executable(px4_hover src/px4_hover.cpp)
 add_executable(Command_Conversion src/Command_Conversion.cpp)
 add_executable(Mavros_Command_Test src/Mavros_Command_Test.cpp)
 add_executable(takeoff_initialize src/takeoff_initialize.cpp)
+add_executable(Crazyflie_PID_Node src/Crazyflie_PID_Node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -161,12 +173,15 @@ target_link_libraries(px4_hover ${catkin_LIBRARIES})
 target_link_libraries(Command_Conversion ${catkin_LIBRARIES})
 target_link_libraries(Mavros_Command_Test ${catkin_LIBRARIES})
 target_link_libraries(takeoff_initialize ${catkin_LIBRARIES})
+target_link_libraries(takeoff_initialize ${catkin_LIBRARIES})
+target_link_libraries(Crazyflie_PID_Node ${catkin_LIBRARIES})
 
-add_dependencies(takeoff_land_erle flyboi_generate_messages_cpp)
-add_dependencies(px4_hover flyboi_generate_messages_cpp)
-add_dependencies(Command_Conversion flyboi_generate_messages_cpp)
-add_dependencies(Mavros_Command_Test flyboi_generate_messages_cpp)
-add_dependencies(takeoff_initialize flyboi_generate_messages_cpp)
+#add_dependencies(takeoff_land_erle flyboi_generate_messages_cpp)
+#add_dependencies(px4_hover flyboi_generate_messages_cpp)
+#add_dependencies(Command_Conversion flyboi_generate_messages_cpp)
+#add_dependencies(Mavros_Command_Test flyboi_generate_messages_cpp)
+#add_dependencies(takeoff_initialize flyboi_generate_messages_cpp)
+#add_dependencies(Crazyflie_PID_Node flyboi_generate_messages_cpp)
 
 #############
 ## Install ##

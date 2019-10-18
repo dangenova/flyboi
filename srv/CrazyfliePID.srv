@@ -1,0 +1,16 @@
+float32 position_x
+float32 position_y
+float32 position_z
+float32 position_roll
+float32 position_pitch
+float32 position_yaw
+float32 reference_x
+float32 reference_y
+float32 reference_z
+float32 reference_yaw
+bool trigger_integral_fix
+---
+float32 actuation_roll
+float32 actuation_pitch
+float32 actuation_thrust_pwm
+float32 actuation_yawrate

@@ -1,0 +1,17 @@
+ <!-- vim: set ft=xml noet : -->
+<launch>
+ <arg name="UAV" default="sitl" />
+ <arg name="Reference_Topic" default = "/command/pose" />
+ <arg name="UAV_Odom_Topic" default = "/ardu/odom" />
+
+ <group ns = "flyboi">
+ 	<rosparam file="$(find flyboi_ethz)/resources/flyboi/$(arg UAV)_param.yaml" />
+ </group>
+
+ 	<node name = "Reference_Node" pkg = "flyboi_ethz" type = "Circle_Path.py" output="screen">
+		<param name="PublishTopic" value="$(arg Reference_Topic)" />
+		<param name="SubscribeTopic" value="$(arg UAV_Odom_Topic)" />
+	</node>
+	
+
+</launch>

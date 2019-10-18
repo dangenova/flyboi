@@ -15,8 +15,8 @@ roll_gain: 0.9
 pitch_gain: 0.9
 drag_coefficients: [ 0.010000 , 0.010000, 0.0000]
 
-q_x: 40
-q_y: 40
+q_x: 50
+q_y: 50
 q_z: 60
 
 q_vx: 20
@@ -36,7 +36,7 @@ r_dthrust: 0.0025
 
 roll_max: deg(25.0)
 pitch_max: deg(25.0)
-yaw_rate_max: deg(90)
+yaw_rate_max: deg(10)
 thrust_min: 5
 thrust_max: 20
 
@@ -50,5 +50,5 @@ antiwindup_ball: 0.4
 enable_offset_free : true
 enable_integrator : true
 
-sampling_time: 0.02    #IMPORTANT: set this equal to the rate of odometry msg
+sampling_time: 0.02   #IMPORTANT: set this equal to the rate of odometry msg
 prediction_sampling_time: 0.1

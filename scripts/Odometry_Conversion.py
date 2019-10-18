@@ -16,7 +16,7 @@ class SubscribeAndPublishOdom():
         #Stuff for message sync
         self.pose_sub = message_filters.Subscriber('/mavros/local_position/pose', PoseStamped)
         self.vel_sub = message_filters.Subscriber('/mavros/local_position/velocity_local', TwistStamped)
-        self.ts = message_filters.TimeSynchronizer([self.pose_sub, self.vel_sub],2)
+        self.ts = message_filters.ApproximateTimeSynchronizer([self.pose_sub, self.vel_sub],2, .1)
         self.ts.registerCallback(self.callback)
         
         #Publish Odometry
@@ -31,6 +31,7 @@ class SubscribeAndPublishOdom():
         self.odom.twist.covariance = self.cov_matrix_pub
 
     def callback(self, pose, vel):
+        self.odom.header.stamp = rospy.Time.now()
         self.odom.pose.pose.position.x = pose.pose.position.x
         self.odom.pose.pose.position.y = pose.pose.position.y
         self.odom.pose.pose.position.z = pose.pose.position.z

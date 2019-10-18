@@ -29,8 +29,11 @@ class Path():
 
 	def update(self):
 		self.msg.header.stamp = rospy.Time.now()
-		self.msg.pose.position.x = 5*math.sin(.3*self.t-self.t_o)+self.x_o
-		self.msg.pose.position.y = .2*self.y_o*(self.t-self.t_o)
+		# self.msg.pose.position.x = 5*math.sin(.3*self.t-self.t_o)+self.x_o
+		# self.msg.pose.position.y = .2*self.y_o*(self.t-self.t_o)
+		
+		self.msg.pose.position.x = 0
+		self.msg.pose.position.y = 0
 		self.msg.pose.position.z = self.z_o
 		self.quaternion = tf.transformations.quaternion_from_euler(self.roll_o, self.pitch_o, self.yaw_o)
 		self.msg.pose.orientation.x = self.quaternion[0]
@@ -46,7 +49,7 @@ if __name__ == '__main__':
 	t_o = rospy.get_time()
 	x_o = 1.0
 	y_o = 1.0
-	z_o = 5.0
+	z_o = 7.0
 	roll_o = 0
 	pitch_o = 0
 	yaw_o = 0
