@@ -1,6 +1,6 @@
 # Dan's Master's Work
 
-Master's Work of using MPC trajectory optimization following an unknown dynamic object.  It uses ETHZ UAV MPC Solver
+Master's Work of using MPC trajectory optimization following an unknown dynamic object.  It uses ETHZ UAV MPC Solver.  The package is currently very disorganized. I am in the process of making it more user friendly before the publication of a journal paper.
 
 ## Setup
 
